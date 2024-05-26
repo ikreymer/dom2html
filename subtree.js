@@ -24,7 +24,7 @@ module.exports = {
    * @returns {JSDOM.Node} The DOM subtree
    */
   constructSubtreeForNode: function(document, nodeLike, includeIframes, domErrorOutput, nodeCallback) {
-    if (nodeLink.nodeName === "SCRIPT") {
+    if (nodeLike && nodeLike.nodeName === "SCRIPT") {
       return null;
     }
 
