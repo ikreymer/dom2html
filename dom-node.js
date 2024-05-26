@@ -39,6 +39,9 @@ module.exports = {
         return document.createElement(nodeLike.nodeName);
         break;
       case NODE_TYPES.TEXT_NODE: // TEXT_NODE
+        if (nodeLike.nodeValue.length > 1024 && nodeLike.nodeValue[nodeLike.nodeValue.length - 1] === "…") {
+          console.warn("TRUNCATED", nodeLike.nodeValue.length);
+        }
         return document.createTextNode(nodeLike.nodeValue);
         break;
       case NODE_TYPES.CDATA_NODE: //CDATA_NODE
