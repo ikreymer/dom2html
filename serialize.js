@@ -40,6 +40,9 @@ module.exports = function serialize(domLike, includeIframes = true, domErrorOutp
     node.children.forEach(n => {
       if (n.childNodeCount === undefined) return; // weird, useless noise in the tree for some reason
       const child = subtree.constructSubtreeForNode(document, n,  includeIframes, domErrorOutput);
+      if (child.tagName === "SCRIPT") {
+        continue;
+      }
       rootNode.appendChild(child);      
     });
   });
