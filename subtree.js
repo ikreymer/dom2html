@@ -24,6 +24,10 @@ module.exports = {
    * @returns {JSDOM.Node} The DOM subtree
    */
   constructSubtreeForNode: function(document, nodeLike, includeIframes, domErrorOutput, nodeCallback) {
+    if (nodeLink.nodeName === "SCRIPT") {
+      return null;
+    }
+
     const elem = domNode.createElemForNode(document, domErrorOutput, nodeLike);
 
     if(!nodeLike.children) nodeLike.children = []; // normalise weird nodes.
@@ -48,7 +52,9 @@ module.exports = {
     nodeLike.contentDocument.children
       .map(child => this.constructSubtreeForNode(document, child, includeIframes, domErrorOutput, nodeCallback))
       .forEach(child => {
-        elem.appendChild(child)
+        if (child) {
+          elem.appendChild(child)
+        }
       return elem;
       });
     }
@@ -57,7 +63,9 @@ module.exports = {
     nodeLike.children
       .map(child => this.constructSubtreeForNode(document, child, includeIframes, domErrorOutput, nodeCallback))
       .forEach(child => {
-        elem.appendChild(child)
+        if (child) {
+          elem.appendChild(child)
+        }
       });
 
     return elem;
@@ -85,7 +93,9 @@ module.exports = {
       if(!node.distributedNodes) return;
       node.distributedNodes.forEach(distributedNode => {
         const distributedElem = this.constructSubtreeForNode(document, backendNodes[distributedNode.backendNodeId], includeIframes, domErrorOutput);
-        elem.appendChild(distributedElem);
+        if (distributedElem) {
+          elem.appendChild(distributedElem);
+        }
       })
     }
 
@@ -94,7 +104,11 @@ module.exports = {
       .map(child => {
         return this.constructSubtreeForNode(document, child, includeIframes, domErrorOutput, distributeNodes.bind(this))
       })
-      .forEach(child => elem.appendChild(child))
+      .forEach(child => {
+        if (child) {
+          elem.appendChild(child);
+        }
+      })
 
     return elem;
   }
